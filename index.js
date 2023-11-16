@@ -14,26 +14,25 @@
 // Debe contar con un método “getProductById” el cual debe buscar en el arreglo el producto que coincida con el id
 // En caso de no coincidir ningún id, mostrar en consola un error “Not found”
 
+// PRIMER DESAFIO ENTREGABLE
+
 class ProductManager {
     constructor() {
       this.products = [];
-      this.productIdCounter = 1; // Contador para asignar IDs autoincrementables
+      this.productIdCounter = 1; 
     }
   
     addProduct(product) {
-      // Validar que todos los campos sean obligatorios
       if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
         console.error('Todos los campos son obligatorios.');
         return;
       }
   
-      // Validar que no se repita el campo "code"
       if (this.products.some(existingProduct => existingProduct.code === product.code)) {
         console.error('Ya existe un producto con el mismo código.');
         return;
       }
   
-      // Agregar el producto con un ID autoincrementable
       const newProduct = {
         ...product,
         id: this.productIdCounter++,
@@ -56,10 +55,8 @@ class ProductManager {
     }
   }
   
-  // Ejemplo de uso:
   const productManager = new ProductManager();
   
-  // Agregar productos
   productManager.addProduct({
     title: 'Cafetera Italiana',
     description: 'La cafetera italiana o cafetera moka produce un café de calidad, intenso y con cuerpo en pocos minutos. Es la forma casera de conseguir un café expreso a baja presión con un funcionamiento sencillo, fácil y rápido. ',
@@ -77,21 +74,21 @@ class ProductManager {
     stock: 30,
   });
   
-  // Obtener la lista de productos
+
   const productList = productManager.getProducts();
   console.log('Lista de productos:', productList);
   
-  // Buscar un producto por ID
+
   const searchProduct = productManager.getProductById(1);
   console.log('Producto encontrado:', searchProduct);
   
-  // Intentar agregar un producto con código repetido (para demostrar la validación)
+
   productManager.addProduct({
     title: 'Cafetera express',
     description: 'Una cafetera express, espresso o exprés se llama así por el sistema de funcionamiento, inventado en Italia a principios del siglo XX y que permitió el nacimiento del café espresso, el gran icono italiano.',
     price: 175000,
     thumbnail: 'imagen3.jpg',
-    code: 'A1', // Este código ya existe
+    code: 'A1', 
     stock: 12,
   });
 
