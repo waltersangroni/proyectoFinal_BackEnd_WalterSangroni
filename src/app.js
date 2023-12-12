@@ -1,48 +1,58 @@
-// Desarrollar un servidor basado en express donde podamos hacer consultas a nuestro archivo de productos.
+// Se debe entregar
+// Desarrollar el servidor basado en Node.JS y express, que escuche en el puerto 8080 y disponga de dos grupos de rutas: /products y /carts. Dichos endpoints estarán implementados con el router de express, con las siguientes especificaciones:
+// Para el manejo de productos, el cual tendrá su router en /api/products/ , configurar las siguientes rutas:
+// La ruta raíz GET / deberá listar todos los productos de la base. (Incluyendo la limitación ?limit del desafío anterior
+// La ruta GET /:pid deberá traer sólo el producto con el id proporcionado
+// La ruta raíz POST / deberá agregar un nuevo producto con los campos:
+// id: Number/String (A tu elección, el id NO se manda desde body, se autogenera como lo hemos visto desde los primeros entregables, asegurando que NUNCA se repetirán los ids en el archivo.
+// title:String,
+// description:String
+// code:String
+// price:Number
+// status:Boolean
+// stock:Number
+// category:String
+// thumbnails:Array de Strings que contenga las rutas donde están almacenadas las imágenes referentes a dicho producto
+// Status es true por defecto.
+// Todos los campos son obligatorios, a excepción de thumbnails
+// La ruta PUT /:pid deberá tomar un producto y actualizarlo por los campos enviados desde body. NUNCA se debe actualizar o eliminar el id al momento de hacer dicha actualización.
+// La ruta DELETE /:pid deberá eliminar el producto con el pid indicado. 
 
-// Se instalarán las dependencias a partir del comando npm install
-// Se echará a andar el servidor
-// Se revisará que el archivo YA CUENTE CON AL MENOS DIEZ PRODUCTOS CREADOS al momento de su entrega, es importante para que los tutores no tengan que crear los productos por sí mismos, y así agilizar el proceso de tu evaluación.
-// Se corroborará que el servidor esté corriendo en el puerto 8080.
-// Se mandará a llamar desde el navegador a la url http://localhost:8080/products sin query, eso debe devolver todos los 10 productos.
-// Se mandará a llamar desde el navegador a la url http://localhost:8080/products?limit=5 , eso debe devolver sólo los primeros 5 de los 10 productos.
-// Se mandará a llamar desde el navegador a la url http://localhost:8080/products/2, eso debe devolver sólo el producto con id=2.
-// Se mandará a llamar desde el navegador a la url http://localhost:8080/products/34123123, al no existir el id del producto, debe devolver un objeto con un error indicando que el producto no existe.
+// Para el carrito, el cual tendrá su router en /api/carts/, configurar dos rutas:
+// La ruta raíz POST / deberá crear un nuevo carrito con la siguiente estructura:
+// Id:Number/String (A tu elección, de igual manera como con los productos, debes asegurar que nunca se dupliquen los ids y que este se autogenere).
+// products: Array que contendrá objetos que representen cada producto
+// La ruta GET /:cid deberá listar los productos que pertenezcan al carrito con el parámetro cid proporcionados.
+// La ruta POST  /:cid/product/:pid deberá agregar el producto al arreglo “products” del carrito seleccionado, agregándose como un objeto bajo el siguiente formato:
+// product: SÓLO DEBE CONTENER EL ID DEL PRODUCTO (Es crucial que no agregues el producto completo)
+// quantity: debe contener el número de ejemplares de dicho producto. El producto, de momento, se agregará de uno en uno.
 
+// Además, si un producto ya existente intenta agregarse al producto, incrementar el campo quantity de dicho producto. 
+// La persistencia de la información se implementará utilizando el file system, donde los archivos “productos,json” y “carrito.json”, respaldan la información.
+// No es necesario realizar ninguna implementación visual, todo el flujo se puede realizar por Postman o por el cliente de tu preferencia
 
 
 import express from "express";
 import  ProductManager from "./productManager.js"; 
+import CartManager from "./cartManager.js";
+import productsRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/cart.routers.js";
 
 const productManager = new ProductManager("./");
+const cartManager = new CartManager("./");
 const PORT= 8080;
 const app = express();
+
+app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static("public"));
 
-app.get("/products", async (req, res) => {
-    const {limit} = req.query;
-    const products = await productManager.getProducts();
-    if(!limit) {
-       return res.send(products);
-    }
-    
-   const limitProducts = products.slice(0, limit);
-   res.send(limitProducts);
-});
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartRouter);
 
-app.get("/products/:id", async (req, res) => {
-    const { id } = req.params;
-    const productId = parseInt(id); 
-  
-    const product = await productManager.getProductById(productId);
-  
-    if (product) {
-      res.send(product);
-    } else {
-      res.status(404).send({ error: "Producto no encontrado" });
-    }
-  });
 
 app.listen(PORT, () => {
     console.log(`Servidor funcionando en puerto ${PORT} `)
 });
+
+export { productManager, cartManager }

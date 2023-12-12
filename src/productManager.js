@@ -1,10 +1,9 @@
-
 import fs from 'fs/promises';
 
     class ProductManager {
     constructor(filePath) {
       this.products = [];
-      this.productIdCounter = 1; 
+      this.productIdCounter = 0; 
       this.path = filePath;
       this.fileName = 'products.json';
       
@@ -20,6 +19,10 @@ import fs from 'fs/promises';
       await this.saveProducts();
       console.log('Producto agregado:', product);
     }
+
+    async generateProductId() {
+      return this.productIdCounter++;
+  }
   
     async getProducts() {
       await this.loadProducts();
@@ -36,14 +39,17 @@ import fs from 'fs/promises';
     }
   }
 
-  async updateProduct(productId, updatedProduct) {
-    const index = this.findIndexById(productId);
+  async updateProduct(updatedProduct) {
+    const index = this.findIndexById(updatedProduct.id);
+
+    console.log('Intentando actualizar producto con ID:', updatedProduct.id);
+    console.log('Productos actuales:', this.products);
 
     if (index !== -1) {
       this.products[index] = {
         ...this.products[index],
         ...updatedProduct,
-        id: productId, 
+        
       };
       await this.saveProducts();
       console.log('Producto actualizado:', this.products[index]);
@@ -86,122 +92,5 @@ import fs from 'fs/promises';
     }
   }
 }
-
-
-  
-  (async () => {
-    let productManager = new ProductManager('./');
-    await productManager.init(); 
-    await productManager.addProduct({
-    title: 'Cafetera Italiana',
-    description: 'La cafetera italiana o cafetera moka produce un café de calidad, intenso y con cuerpo en pocos minutos. Es la forma casera de conseguir un café expreso a baja presión con un funcionamiento sencillo, fácil y rápido. ',
-    price: 30000,
-    thumbnail: 'imagen1.jpg',
-    code: 'A1',
-    stock: 20,
-  });  
-  await productManager.addProduct({
-    title: 'Cafetera prensa Francesa',
-    description: 'La prensa francesa es un tipo de cafetera de émbolo o de pistón con el que se puede obtener una excelente taza de café de forma fácil y rápida. El café preparado con prensa francesa tiene mucho cuerpo y es más denso, ya que retiene más aceites del café que otras cafeteras.',
-    price: 22000,
-    thumbnail: 'imagen2.jpg',
-    code: 'A2',
-    stock: 30,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera express',
-    description: 'Una cafetera express, espresso o exprés se llama así por el sistema de funcionamiento, inventado en Italia a principios del siglo XX y que permitió el nacimiento del café espresso, el gran icono italiano.',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A3', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 155000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A4', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 1750,
-    thumbnail: 'imagen3.jpg',
-    code: 'A5', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A6', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A7', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A8', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A9', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A10', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A11', 
-    stock: 12,
-  });
-  await productManager.addProduct({
-    title: 'Cafetera... ',
-    description: 'Una cafetera express...',
-    price: 175000,
-    thumbnail: 'imagen3.jpg',
-    code: 'A12', 
-    stock: 12,
-  })
-
-  const productList = await productManager.getProducts();
-  console.log('Lista de productos:', productList);
-  
-
-  const searchProduct = await productManager.getProductById(1);
-  console.log('Producto encontrado:', searchProduct);
-  
-  await productManager.updateProduct(1, {
-    price: 55000,
-    stock: 15,
-  });
-  
-  await productManager.deleteProduct(2);
-})();
 
 export default ProductManager

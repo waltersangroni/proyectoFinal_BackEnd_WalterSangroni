@@ -1,0 +1,57 @@
+[
+  {
+    "id": 13,
+    "title": "n",
+    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
+    "code": "A33333331",
+    "price": 55000,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": []
+  },
+  {
+    "id": 15,
+    "title": "a",
+    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
+    "code": "A33333331",
+    "price": 55000,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": []
+  },
+  {
+    "id": 17,
+    "title": "s",
+    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
+    "code": "A33333331",
+    "price": 55000,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": []
+  },
+  {
+    "id": 19,
+    "title": "c",
+    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
+    "code": "A33333331",
+    "price": 55000,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": []
+  },
+  {
+    "id": 21,
+    "title": "f",
+    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
+    "code": "A33333331",
+    "price": 55000,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónicos",
+    "thumbnails": []
+  }
+]
