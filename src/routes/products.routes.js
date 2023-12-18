@@ -41,7 +41,7 @@ const productsRouter = Router();
             if (!title || !description || !code || !price || !stock || !category) {
                 return res.status(400).send({ error: "Todos los campos son obligatorios" })
             }
-            const newProductId = await productManager.generateProductId();
+            const newProductId = productManager.generateProductId();
 
             const newProduct = {
                 id: newProductId,

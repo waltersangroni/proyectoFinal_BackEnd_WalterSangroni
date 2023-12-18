@@ -1,57 +1,57 @@
 [
   {
-    "id": 13,
-    "title": "n",
-    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
-    "code": "A33333331",
-    "price": 55000,
+    "title": "lelele",
+    "descripcion": "",
+    "code": "",
     "status": true,
-    "stock": 15,
-    "category": "Electrónicos",
-    "thumbnails": []
+    "stock": 0,
+    "price": "12",
+    "thumbnails": [],
+    "category": "lelele",
+    "id": 1
   },
   {
-    "id": 15,
-    "title": "a",
-    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
-    "code": "A33333331",
-    "price": 55000,
+    "title": "sss",
+    "descripcion": "",
+    "code": "",
     "status": true,
-    "stock": 15,
-    "category": "Electrónicos",
-    "thumbnails": []
+    "stock": 0,
+    "price": "22",
+    "thumbnails": [],
+    "category": "sss",
+    "id": 0
   },
   {
-    "id": 17,
-    "title": "s",
-    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
-    "code": "A33333331",
-    "price": 55000,
+    "title": "hdhgdfg",
+    "descripcion": "",
+    "code": "",
     "status": true,
-    "stock": 15,
-    "category": "Electrónicos",
-    "thumbnails": []
+    "stock": 0,
+    "price": "5454",
+    "thumbnails": [],
+    "category": "yjjhf",
+    "id": 0
   },
   {
-    "id": 19,
-    "title": "c",
-    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
-    "code": "A33333331",
-    "price": 55000,
+    "title": "gjkgj",
+    "descripcion": "",
+    "code": "",
     "status": true,
-    "stock": 15,
-    "category": "Electrónicos",
-    "thumbnails": []
+    "stock": 0,
+    "price": "5456",
+    "thumbnails": [],
+    "category": "bkjhjkb",
+    "id": 1
   },
   {
-    "id": 21,
-    "title": "f",
-    "description": "dsaasdfdsddfsfddfdssfdsdfsdffsadfsafsafdsfdsfdf ",
-    "code": "A33333331",
-    "price": 55000,
+    "title": "mnkj",
+    "descripcion": "",
+    "code": "",
     "status": true,
-    "stock": 15,
-    "category": "Electrónicos",
-    "thumbnails": []
+    "stock": 0,
+    "price": "989",
+    "thumbnails": [],
+    "category": "gf",
+    "id": 0
   }
 ]

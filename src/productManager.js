@@ -6,23 +6,28 @@ import fs from 'fs/promises';
       this.productIdCounter = 0; 
       this.path = filePath;
       this.fileName = 'products.json';
-      
     }
 
     async init() {
       await this.loadProducts();
+
+      //idea para que productIdCounter empiece con un id que respete los productos que ya hay pero no funciona
+      //this.products.forEach((producto) => {
+      //  if(producto.id > productIdCounter) {
+      //    productIdCounter = producto.id + 1;
+      //  }
+      //})
     }
 
     async addProduct(product) {
-      product.id = this.productIdCounter++;
       this.products.push(product);
       await this.saveProducts();
       console.log('Producto agregado:', product);
     }
 
-    async generateProductId() {
+    generateProductId() {
       return this.productIdCounter++;
-  }
+    }
   
     async getProducts() {
       await this.loadProducts();
@@ -31,12 +36,12 @@ import fs from 'fs/promises';
 
     async getProductById(productId) {
       await this.loadProducts();
-    const searchProduct = this.products.find(product => product.id === productId);
-    if (searchProduct) {
-      return searchProduct;
-    } else {
-      console.error('Producto no encontrado:', productId);
-    }
+      const searchProduct = this.products.find(product => product.id === productId);
+      if (searchProduct) {
+        return searchProduct;
+      } else {
+        console.error('Producto no encontrado:', productId);
+      }
   }
 
   async updateProduct(updatedProduct) {
@@ -61,6 +66,8 @@ import fs from 'fs/promises';
   async deleteProduct(productId) {
     const index = this.findIndexById(productId);
 
+    console.log(typeof(productId))
+
     if (index !== -1) {
       const deletedProduct = this.products.splice(index, 1)[0];
       await this.saveProducts();
@@ -78,6 +85,7 @@ import fs from 'fs/promises';
     try {
       const data = await fs.readFile(this.path + this.fileName, 'utf8');
       this.products = JSON.parse(data);
+
     } catch (error) {
       console.error('Error al cargar el archivo de productos:', error);
     }
