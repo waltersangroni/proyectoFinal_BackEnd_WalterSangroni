@@ -24,9 +24,8 @@ cartRouter.post("/", async (req, res) => {
 cartRouter.get("/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        const cartId = parseInt(id);
 
-        const existingCart = await cartManager.getCartById(cartId);
+        const existingCart = await cartManager.getCartById(id);
         if (!existingCart) {
             return res.status(404).send({ error: "Carrito no encontrado"});
         }
@@ -43,26 +42,24 @@ cartRouter.get("/:id", async (req, res) => {
 cartRouter.post("/:cid/products/:pid", async (req, res) => {
     try {
         const {cid, pid} = req.params;
-        const cartId = parseInt(cid);
-        const productId = parseInt(pid);
 
-        const existingCart = await cartManager.getCartById(cartId);
+        const existingCart = await cartManager.getCartById(cid);
         if (!existingCart) {
             return res.status(404).send({ error: "Carrito no encontrado"});
         }
 
-        const existingProduct = await productManager.getProductById(productId);
+        const existingProduct = await productManager.getProductById(pid);
         if (!existingProduct) {
             return res.status(404).send({ error: "Producto no encontrado."});
         }
 
-        const cartProductIndex = existingCart.products.findIndex(cartProduct => cartProduct.product === productId);
+        const cartProductIndex = existingCart.products.findIndex(cartProduct => cartProduct.product === pid);
 
         if( cartProductIndex !== -1) {
             existingCart.products[cartProductIndex].quantity++;
         } else {
             const cartProduct = {
-                product: productId,
+                product: pid,
                 quantity: 1
         };
             existingCart.products.push(cartProduct);   

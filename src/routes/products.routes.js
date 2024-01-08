@@ -16,9 +16,8 @@ const productsRouter = Router();
     
     productsRouter.get("/:id", async (req, res) => {
         const { id } = req.params;
-        const productId = parseInt(id); 
       
-        const product = await productManager.getProductById(productId);
+        const product = await productManager.getProductById(id);
       
         if (product) {
           res.send(product);
@@ -67,9 +66,8 @@ const productsRouter = Router();
       productsRouter.put("/:id", async (req, res) => {
         try {
           const {id} = req.params;
-          const productId = parseInt(id);
 
-          const existingProduct = await productManager.getProductById(productId);
+          const existingProduct = await productManager.getProductById(id);
           if (!existingProduct) {
             return res.status(404).send({ error: "Producto no encontrado"});
           }
@@ -92,6 +90,8 @@ const productsRouter = Router();
             existingProduct.category = category || existingProduct.category;
             existingProduct.thumbnails = thumbnails || existingProduct.thumbnails;
 
+            console.log(existingProduct)
+
             await productManager.updateProduct(existingProduct);
 
             res.send({ message: "Producto actualizado.", product: existingProduct});
@@ -104,14 +104,13 @@ const productsRouter = Router();
       productsRouter.delete("/:id", async (req, res) => {
         try {
           const {id} = req.params;
-          const productId = parseInt(id);
 
-          const existingProduct = await productManager.getProductById(productId);
+          const existingProduct = await productManager.getProductById(id);
           if (!existingProduct) {
             return res.status(404).send({ error: "Producto no encontrado"})
           }
 
-          await productManager.deleteProduct(productId);
+          await productManager.deleteProduct(id);
 
           res.send({ message: "Producto eliminado"});
         }

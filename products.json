@@ -1,38 +1,5 @@
 [
   {
-    "title": "lelele",
-    "descripcion": "",
-    "code": "",
-    "status": true,
-    "stock": 0,
-    "price": "12",
-    "thumbnails": [],
-    "category": "lelele",
-    "id": 1
-  },
-  {
-    "title": "sss",
-    "descripcion": "",
-    "code": "",
-    "status": true,
-    "stock": 0,
-    "price": "22",
-    "thumbnails": [],
-    "category": "sss",
-    "id": 0
-  },
-  {
-    "title": "hdhgdfg",
-    "descripcion": "",
-    "code": "",
-    "status": true,
-    "stock": 0,
-    "price": "5454",
-    "thumbnails": [],
-    "category": "yjjhf",
-    "id": 0
-  },
-  {
     "title": "gjkgj",
     "descripcion": "",
     "code": "",
@@ -41,7 +8,7 @@
     "price": "5456",
     "thumbnails": [],
     "category": "bkjhjkb",
-    "id": 1
+    "id": "1"
   },
   {
     "title": "mnkj",
@@ -52,6 +19,39 @@
     "price": "989",
     "thumbnails": [],
     "category": "gf",
-    "id": 0
+    "id": "0"
+  },
+  {
+    "title": "pepepe",
+    "descripcion": "",
+    "code": "",
+    "status": true,
+    "stock": 0,
+    "price": "2345",
+    "thumbnails": [],
+    "category": "dedede",
+    "id": "0"
+  },
+  {
+    "title": "cafe",
+    "descripcion": "",
+    "code": "",
+    "status": true,
+    "stock": 0,
+    "price": "2222",
+    "thumbnails": [],
+    "category": "cafeff",
+    "id": "0"
+  },
+  {
+    "title": "cafecito",
+    "descripcion": "",
+    "code": "",
+    "status": true,
+    "stock": 0,
+    "price": "667436",
+    "thumbnails": [],
+    "category": "cafecitooo",
+    "id": "0"
   }
 ]

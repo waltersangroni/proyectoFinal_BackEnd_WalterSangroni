@@ -11,6 +11,8 @@ import fs from 'fs/promises';
     async init() {
       await this.loadProducts();
 
+      console.log(this.products)
+
       //idea para que productIdCounter empiece con un id que respete los productos que ya hay pero no funciona
       //this.products.forEach((producto) => {
       //  if(producto.id > productIdCounter) {
@@ -26,7 +28,8 @@ import fs from 'fs/promises';
     }
 
     generateProductId() {
-      return this.productIdCounter++;
+      this.productIdCounter++;
+      return this.productIdCounter.toString();
     }
   
     async getProducts() {
