@@ -3,16 +3,24 @@ import { productManager } from "../app.js";
 
 const productsRouter = Router();
 
-    productsRouter.get("/", async (req, res) => {
-        const {limit} = req.query;
-        const products = await productManager.getProducts();
-        if(!limit) {
-           return res.send(products);
-        }
-        
-       const limitProducts = products.slice(0, limit);
-       res.send(limitProducts);
-    });
+productsRouter.get("/", async (req, res) => {
+  try {
+    const { limit = 10, page = 1, query = '', sort = '' } = req.query;
+    console.log("Query parameters:", { limit, page, query, sort });
+    const resultado = await productManager.loadProducts(limit, page, query, sort);
+    console.log("Result:", resultado);
+    if(resultado){
+      res.send(resultado);
+    }
+    else{
+      res.status(400).json({message: 'Not found'})
+    }
+  } 
+  catch (err) {
+    console.log({ err });
+    res.status(400).json({ message: "Error al obtener los productos" + err.message });
+}
+})
     
     productsRouter.get("/:id", async (req, res) => {
         const { id } = req.params;

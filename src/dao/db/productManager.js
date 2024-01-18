@@ -53,19 +53,30 @@ class ProductManager {
             throw error;
         }
     }
+    
   
-    async loadProducts() {
+    async loadProducts(limit = 10, page = 1, query = '', sort = '') {
         try {
-            const productsFromDB = await productModel.find().lean();
-            productsFromDB.forEach((producto) => {
-                producto.id = producto._id.toString();
-                delete producto._id;
-            });
-            this.products = productsFromDB;
-        } catch (error) {
-            console.error("Error cargando productos desde la base de datos:", error);
+          const [code, value] = query.split(':');
+        
+          const productsFromDB = await productModel.paginate({ [code]: value }, {
+            limit,
+            page,
+            sort: sort ? { price: sort } : {}
+          });
+      
+          productsFromDB.payload = productsFromDB.docs;
+          delete productsFromDB.docs;
+      
+          console.log("Products from DB:", productsFromDB);
+      
+          return { message: "OK", ...productsFromDB };
+        } catch (e) {
+          console.error("Error al obtener productos desde la base de datos:", e);
+          return { message: "ERROR", rdo: "No hay productos" };
         }
-    }
+      }
 }
+            
 
 export default ProductManager;
