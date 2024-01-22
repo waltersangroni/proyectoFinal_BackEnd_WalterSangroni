@@ -1,6 +1,7 @@
-<h1>Productos</h1>
+<h1>Bienvenido/a {{ user.first_name }} {{ user.last_name }}</h1>
+<h3>Lista de productos</h3>
 
-{{#each payload}}
+{{#each products.payload}}
   <div >
     <p>Id: {{this._id}}</p>
     <p>Title: {{this.title}}</p>
@@ -9,7 +10,7 @@
     <p>Status: {{this.status}}</p>
     <p>Code: {{this.code}}</p>
     <p>Stock: {{this.stock}}</p>
-    <button id="{{this._id}}">Agregar al carrito</button>
+    <button id="{{this._id}}" type="button">Agregar al carrito</button>
   </div>
 {{/each}}<br /><br />
 
@@ -21,5 +22,4 @@
     <button><a href="/products?page={{nextPage}}">Siguiente</a></button>
 {{/if}}
 
-
-<script src="js/products.js"></script>
+<script src="js/products.js"></script> 

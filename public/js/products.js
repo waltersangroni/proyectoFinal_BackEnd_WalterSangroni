@@ -25,7 +25,6 @@ const addProductsToCart = async (pId) => {
 
 for(let btn of btns){
     btn.addEventListener('click', (event) => {
-        console.log('Product ID:', btn.id);
         addProductsToCart(btn.id);
     });
 }

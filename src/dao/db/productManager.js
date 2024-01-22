@@ -67,9 +67,7 @@ class ProductManager {
       
           productsFromDB.payload = productsFromDB.docs;
           delete productsFromDB.docs;
-      
-          console.log("Products from DB:", productsFromDB);
-      
+            
           return { message: "OK", ...productsFromDB };
         } catch (e) {
           console.error("Error al obtener productos desde la base de datos:", e);

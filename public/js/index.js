@@ -1,20 +1,30 @@
-const socket = io();
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", async (e) => {
+  const result = await fetch("http://localhost:8080/api/session/logout", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const { redirect } = await result.json();
+  window.location.href = redirect;
+});
 
 const botones_delete = document.querySelectorAll(".btn_delete");
 
 botones_delete.forEach((boton) => {
-  boton.addEventListener('click', () => {
-    const productoId = boton.getAttribute("data-producto-id")
-    socket.emit('deleteProduct', productoId);
-  })
-})
-
+  boton.addEventListener("click", () => {
+    const productoId = boton.getAttribute("data-producto-id");
+    socket.emit("deleteProduct", productoId);
+  });
+});
 
 function createProduct() {
-    const newProductName = document.getElementById('newProductName').value;
-    const newProductPrice = document.getElementById('newProductPrice').value;
-    const newProductCategory = document.getElementById('newProductCategory').value;
-
+  const newProductName = document.getElementById("newProductName").value;
+  const newProductPrice = document.getElementById("newProductPrice").value;
+  const newProductCategory =
+    document.getElementById("newProductCategory").value;
 
   const newProduct = {
     title: newProductName,
@@ -27,38 +37,36 @@ function createProduct() {
     category: newProductCategory,
   };
 
-  socket.emit('addProduct', newProduct);
+  socket.emit("addProduct", newProduct);
 
-  document.getElementById('productForm').reset();
+  document.getElementById("productForm").reset();
 }
 
-socket.on("updateProducts", (productos) => {
-    if (Array.isArray(productos)) {
-        const productList = document.getElementById("product-list");
-        productList.innerHTML = productos
-          .map(
-            (product) => `
-            <div>
-              <h3 style="color: green;">${product.title}</h3>
-              <p><strong>Price:</strong> ${product.price}</p>
-              <p><strong>Category:</strong> ${product.category}</p>
-              <button class="btn_delete" data-producto-id=${product.id}>ELIMINAR</button>
-            </div>`
-          )
-          .join('');
+// const socket = io();
+// socket.on("updateProducts", (productos) => {
+//     if (Array.isArray(productos)) {
+//         const productList = document.getElementById("product-list");
+//         productList.innerHTML = productos
+//           .map(
+//             (product) => `
+//             <div>
+//               <h3 style="color: green;">${product.title}</h3>
+//               <p><strong>Price:</strong> ${product.price}</p>
+//               <p><strong>Category:</strong> ${product.category}</p>
+//               <button class="btn_delete" data-producto-id=${product.id}>ELIMINAR</button>
+//             </div>`
+//           )
+//           .join('');
 
-        const new_botones_delete = document.querySelectorAll(".btn_delete");
+//         const new_botones_delete = document.querySelectorAll(".btn_delete");
 
-        new_botones_delete.forEach((boton) => {
-          boton.addEventListener('click', () => {
-            const productoId = parseInt(boton.getAttribute("data-producto-id"))
-            socket.emit('deleteProduct', productoId);
-          })
-        })
-    } else {
-        console.error("El objeto productos no es un array.");
-    }
-});
-
-
-   
+//         new_botones_delete.forEach((boton) => {
+//           boton.addEventListener('click', () => {
+//             const productoId = parseInt(boton.getAttribute("data-producto-id"))
+//             socket.emit('deleteProduct', productoId);
+//           })
+//         })
+//     } else {
+//         console.error("El objeto productos no es un array.");
+//     }
+// });
