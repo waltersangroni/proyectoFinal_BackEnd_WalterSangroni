@@ -14,8 +14,20 @@ viewRoutes.get('/login',checkExistingUser, (req, res) => {
   res.render('login');
 });
 
+viewRoutes.get("/faillogin", (req, res) => {
+  res.render("faillogin");
+})
+
+viewRoutes.get("/failregister", (req, res) => {
+  res.render("failregister");
+})
+
 viewRoutes.get('/register',checkExistingUser, (req, res) => {
   res.render('register');
+})
+
+viewRoutes.get("/restore-password",checkExistingUser, (req, res) => {
+  res.render("restore-password");
 })
 
 
