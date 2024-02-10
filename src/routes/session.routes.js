@@ -3,10 +3,9 @@ import { userModel } from "../dao/db/models/user.model.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import passport from "passport";
 import { generateToken } from "../config/jwt.config.js";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 const sessionRoutes = Router();
-
 
 // sessionRoutes.post("/register", async (req, res) => {
 //   const { first_name, last_name, email, age, password } = req.body;
@@ -27,41 +26,41 @@ const sessionRoutes = Router();
 //   res.status(201).send({accessToken, message: "Created"})
 // });
 
-
-sessionRoutes.post("/register", passport.authenticate("register", { failureRedirect: "/failregister" }), async (req, res) => {
-  try {
-      if (req.body.email === "adminCoder@coder.com" && req.body.password === "adminCod3r123") {
-          req.body.role = "admin";
-      } else {
-          req.body.role = "usuario";
-      }
-      
-      const user = await userModel.create(req.body);
+sessionRoutes.post(
+  "/register",
+  passport.authenticate("register", { failureRedirect: "/failregister" }),
+  async (req, res) => {
+    try {
+      const user = await userModel.findOne({ email: req.body.email });
       req.session.user = user;
-      res.status(201).send({ message: "User registered" });
+
+      console.log("User created successfully");
       res.redirect("/");
-  } catch (error) {
+    } catch (error) {
       console.error("Error during registration:", error);
-      res.status(500).send({ message: "Internal Server Error" });
+      res
+        .status(500)
+        .send({ message: `Internal Server Error: ${error.message}` });
+    }
   }
-});
+);
 
 sessionRoutes.post(
-     "/login",
-     passport.authenticate("login", { failureRedirect: "/faillogin" }),
-     async (req, res) => {
-       if (!req.user) {
-         return res.status(400).send({ message: "Error with credentials" });
-       }
-       req.session.user = {
-         first_name: req.user.first_name,
-         last_name: req.user.last_name,
-         age: req.user.age,
-         email: req.user.email,
-       };
-       res.redirect("/");
-     }
-   );
+  "/login",
+  passport.authenticate("login", { failureRedirect: "/faillogin" }),
+  async (req, res) => {
+    if (!req.user) {
+      return res.status(400).send({ message: "Error with credentials" });
+    }
+    req.session.user = {
+      first_name: req.user.first_name,
+      last_name: req.user.last_name,
+      age: req.user.age,
+      email: req.user.email,
+    };
+    res.redirect("/");
+  }
+);
 
 //  sessionRoutes.post("/login", async (req, res) => {
 //    const {email, password} = req.body;
@@ -80,8 +79,8 @@ sessionRoutes.post(
 //        const user = await userModel.findOne({email});
 //        if(!user){
 //            return res.status(404).json({message: 'User not found'});
-//        }  
-//        const passwordMatch = await bcrypt.compare(password, user.password);      
+//        }
+//        const passwordMatch = await bcrypt.compare(password, user.password);
 //        if (!passwordMatch) {
 //          return res.status(401).send({ message: 'Invalid credentials' });
 //        }
@@ -100,7 +99,6 @@ sessionRoutes.post(
 //    }
 //  });
 
-
 sessionRoutes.post("/logout", async (req, res) => {
   try {
     req.session.destroy((err) => {
@@ -117,34 +115,50 @@ sessionRoutes.post("/logout", async (req, res) => {
 });
 
 sessionRoutes.post("/restore-password", async (req, res) => {
-    const {email, password} = req.body;
-    try {
-        const user = await userModel.findOne({email});
-        if(!user){
-            return res.status(401).send({message: "Unauthorized"})
-        }
-        user.password = createHash(password);
-        await user.save();
-        res.send({message: "Password updated"})
-    } catch (error) {
-        console.error(error);
-        res.status(400).send({error});
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(401).send({ message: "Unauthorized" });
     }
-})
+    user.password = createHash(password);
+    await user.save();
+    res.send({ message: "Password updated" });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ error });
+  }
+});
+
+sessionRoutes.get("/current", (req, res) => {
+  try {
+    // Verifica si el usuario está autenticado
+    if (req.isAuthenticated()) {
+      // Devuelve el usuario actual en la respuesta
+      res.status(200).json(req.user);
+    } else {
+      // Si no hay usuario autenticado, devuelve un mensaje de error
+      res.status(401).json({ message: "No hay usuario autenticado" });
+    }
+  } catch (error) {
+    console.error("Error al obtener el usuario actual:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 
 sessionRoutes.get(
   "/github",
- passport.authenticate("github", {scope: ["user:email"]}),
+  passport.authenticate("github", { scope: ["user:email"] }),
   (req, res) => {}
-  );
+);
 
 sessionRoutes.get(
   "/githubcallback",
-  passport.authenticate("github", { failureRedirect: "/login"}), 
+  passport.authenticate("github", { failureRedirect: "/login" }),
   (req, res) => {
     req.session.user = req.user;
     res.redirect("/");
   }
-)
+);
 
 export default sessionRoutes;
