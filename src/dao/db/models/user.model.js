@@ -1,12 +1,3 @@
-// Crear un modelo User el cual contará con los campos:
-// first_name:String,
-// last_name:String,
-// email:String (único)
-// age:Number,
-// password:String(Hash)
-// cart:Id con referencia a Carts
-// role:String(default:’user’)
-
 import mongoose from "mongoose";
 
 const userCollection = 'users';

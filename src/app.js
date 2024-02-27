@@ -1,3 +1,16 @@
+// Con base en las clases previamente vistas, realizar los cambios
+// necesarios en tu proyecto para que se base en un modelo de capas.
+
+// Aspectos a incluir
+// El proyecto debe contar con capas de routing, controlador, dao, 
+// con nuestras vistas bien separadas y con las responsabilidades 
+// correctamente delegadas.
+
+// Además, mover del proyecto todas las partes importantes 
+// y comprometedoras en un archivo .env para poder leerlo bajo
+//  variables de entorno en un archivo config.js
+
+
 import express from "express";
 //import ProductManager from "./dao/fileSystem/productManager.js"; 
 //import CartManager from "./dao/fileSystem/cartManager.js";
@@ -15,6 +28,7 @@ import sessionRoutes from "./routes/session.routes.js";
 import mongoose from "mongoose";
 import passport from "passport";
 import  initializePassport from "./config/passport.config.js";
+import { mongoSecret } from "./config/env.config.js"
 
 dbConnect();
 
@@ -28,7 +42,7 @@ const PORT= 8080;
 const app = express();
 
 app.use(session({
-  secret: "C0d3rh0us3",
+  secret: mongoSecret,
   store: MongoStore.create({
     mongoUrl: "mongodb+srv://walterhugosangroni:simon1003@coderbackend.nesyhds.mongodb.net/ecommerce",
   }),

@@ -2,7 +2,6 @@ import { Router } from "express";
 import { productManager } from "../app.js"; 
 import { checkAuth, checkExistingUser } from "../middlewars/auth.js";
 
-
 const viewRoutes = Router();
 
 viewRoutes.get('/',checkAuth, (req, res) => {

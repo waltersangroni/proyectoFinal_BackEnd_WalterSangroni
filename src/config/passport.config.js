@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import { userModel } from "../dao/db/models/user.model.js";
-import  cartModel  from "../dao/db/models/cart.model.js";
+import cartModel from "../dao/db/models/cart.model.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import { Strategy as GithubStrategy } from "passport-github2";
 
@@ -21,14 +21,14 @@ const initializePassport = () => {
             return done(null, false);
           }
 
-          let role = "usuario"
+          let role = "usuario";
 
           if (
             req.body.email === "adminCoder@coder.com" &&
             req.body.password === "adminCod3r123"
           ) {
             role = "admin";
-          } 
+          }
 
           const newUser = {
             first_name,
@@ -37,7 +37,7 @@ const initializePassport = () => {
             age,
             cart,
             password: createHash(password),
-            role
+            role,
           };
 
           const result = await userModel.create(newUser);
@@ -92,16 +92,14 @@ passport.use(
             email: profile._json.email,
             passport: "GithubGenerated",
           };
-          console.log(profile._json)
+          console.log(profile._json);
           const result = await userModel.create(newUser);
 
-          // Crear un carrito para el nuevo usuario
           const newCart = await cartModel.create({
-            id: "GitHubGeneratedCart", // Puedes ajustar el valor del id según tu lógica
-            products: [], // Otra información del carrito si es necesario
+            id: "GitHubGeneratedCart",
+            products: [],
           });
 
-          // Asignar el carrito al usuario
           result.cart = newCart._id;
           await result.save();
 
