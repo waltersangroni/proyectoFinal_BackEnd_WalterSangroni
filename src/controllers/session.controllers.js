@@ -1,4 +1,5 @@
 import { userModel } from "../dao/db/models/user.model.js";
+import UserDTO from "../dtos/user.dto.js";
 
 export const postSessionRegister = async (req, res) => {
   try {
@@ -59,18 +60,21 @@ export const postSessionRestorePassword = async (req, res) => {
   }
 };
 
-export const getSessionCurrent = async (req, res) => {
-  try {
-    // Verifica si el usuario está autenticado
-    if (req.isAuthenticated()) {
-      // Devuelve el usuario actual en la respuesta
-      res.status(200).json(req.user);
-    } else {
-      // Si no hay usuario autenticado, devuelve un mensaje de error
-      res.status(401).json({ message: "No hay usuario autenticado" });
-    }
-  } catch (error) {
-    console.error("Error al obtener el usuario actual:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
-  }
-};
+// export const getSessionCurrent = async (req, res) => {
+//   try {
+//     if (req.isAuthenticated()) {
+//       const user = new UserDTO(req.user);
+//       res.status(200).json(user);
+//     } else {
+//       res.status(401).json({ message: "No hay usuario autenticado" });
+//     }
+//   } catch (error) {
+//     console.error("Error al obtener el usuario actual:", error);
+//     res.status(500).json({ message: "Error interno del servidor" });
+//   }
+// };
+
+export const getCurrentUser = (req, res) => {
+  const user = new UserDTO(req.user);
+  res.send(user.getCurrentUser());
+}

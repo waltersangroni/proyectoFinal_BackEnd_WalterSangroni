@@ -4,7 +4,7 @@ import {
   postSessionLogin,
   postSessionLogout,
   postSessionRestorePassword,
-  getSessionCurrent,
+  getCurrentUser,
 } from "../controllers/session.controllers.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import passport from "passport";
@@ -25,7 +25,7 @@ sessionRoutes.post(
 );
 sessionRoutes.post("/logout", postSessionLogout);
 sessionRoutes.post("/restore-password", postSessionRestorePassword);
-sessionRoutes.get("/current", getSessionCurrent);
+sessionRoutes.get("/current", getCurrentUser);
 
 // sessionRoutes.post("/register", async (req, res) => {
 //   const { first_name, last_name, email, age, password } = req.body;

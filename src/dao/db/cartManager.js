@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 class CartManager {
     constructor() {
         this.carts = [];
+        this.init();
     }
 
     async init() {

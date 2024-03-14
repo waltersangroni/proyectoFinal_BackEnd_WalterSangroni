@@ -7,6 +7,7 @@ class CartManager {
         this.cartIdCounter = 0;
         this.path = filePath;
         this.fileName = "carts.json";
+        this.init()
     }
 
     async init() {

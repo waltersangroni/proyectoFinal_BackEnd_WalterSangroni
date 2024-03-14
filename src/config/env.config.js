@@ -11,5 +11,7 @@ dotenv.config({ silent: false, path: loadPath });
 
 const jwtKey = process.env.JWT_KEY;
 const mongoSecret = process.env.MONGO_SECRET;
+const port = process.env.PORT;
+const mongoUrl = process.env.MONGO_URL;
 
-export { jwtKey, mongoSecret };
+export { jwtKey, mongoSecret, port, mongoUrl };

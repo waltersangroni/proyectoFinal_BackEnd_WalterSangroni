@@ -5,4 +5,4 @@ const messageSchema = mongoose.Schema({
     message: String
 });
 
-export const userModel = mongoose.model(messages, messageSchema)
+export const userModel = mongoose.model("messages", messageSchema)

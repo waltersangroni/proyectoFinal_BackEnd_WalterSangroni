@@ -1,9 +1,48 @@
-import { cartManager } from "../app.js";
+import Ticket from "../dao/db/ticketManager.js";
+import CartManager from "../dao/db/cartManager.js";
+
+const ticketService = new Ticket();
+const cartService = new CartManager();
+
+export const purchaseCart = async (req, res) => {
+  const { cId } = req.params;
+  const cart = await cartService.getCartById(cId);
+  const productsNotPurchased = cart.products.filter(product => {
+      return product.product.stock < product.quantity;
+  });
+  const productsPurchased = cart.products.filter(product => {
+      return product.product.stock >= product.quantity;
+  });
+  if (productsNotPurchased.length > 0) {
+      cart.products = productsNotPurchased;
+      await cartService.updateCart(cId, cart);
+  }
+  const totalprice = productsPurchased.reduce((acc, product) => {
+      return acc + (product.product.price * product.quantity);
+  }, 0);
+  for (const product of productsPurchased) {
+      const remainingStock = product.product.stock - product.quantity;
+      const newStock = {
+          stock: remainingStock
+      }
+      await productService.updateProduct(product.product._id, newStock);
+  }
+  const newTicket = {
+    code: Math.floor(Math.random() * 9000000) + 1000000,
+    purchase_datatime: new Date(),
+    amount: totalprice,
+    purchaser: req.user.email
+}
+await ticketService.createTicket(newTicket);
+return res.send({message: "Ticket create"});
+};
+
+
 
 export const getCartId = async (req, res) => {
   try {
     const { cId } = req.params;
-    const resultado = await cartManager.getProductsCartById(cId);
+    const resultado = await cartService.getProductsCartById(cId);
     if (resultado.message === "OK") {
       return res.status(200).json(resultado);
     }
@@ -16,7 +55,7 @@ export const getCartId = async (req, res) => {
 export const deleteCartId = async (req, res) => {
   try {
     const { cId } = req.params;
-    const deleted = await cartManager.deleteAllProductsInCart(cId);
+    const deleted = await cartService.deleteAllProductsInCart(cId);
 
     if (deleted) {
       return res.status(200).json({ message: "Products deleted" });
@@ -38,7 +77,7 @@ export const deleteCartIdProductsId = async (req, res) => {
   const { cId, pId } = req.params;
 
   try {
-    const result = await cartManager.deleteProductInCart(cId, pId);
+    const result = await cartService.deleteProductInCart(cId, pId);
     if (result) {
       res.send({ message: "Product deleted" });
     } else {
@@ -54,7 +93,7 @@ export const putCartId = async (req, res) => {
   const { cId } = req.params;
   const cart = req.body;
   try {
-    const result = await cartManager.updateCart(cId, cart);
+    const result = await cartService.updateCart(cId, cart);
     if (result.modifiedCount > 0) {
       res.send({ message: "Cart updated" });
     } else {
@@ -69,7 +108,7 @@ export const putCartId = async (req, res) => {
 export const putCartIdProductsId = async (req, res) => {
   const { cId, pId } = req.params;
   const { quantity } = req.body;
-  const result = await cartManager.updateProductInCart(cId, pId, quantity);
+  const result = await cartService.updateProductInCart(cId, pId, quantity);
   if (result) {
     res.send({ message: "Product updated" });
   } else {
@@ -79,14 +118,14 @@ export const putCartIdProductsId = async (req, res) => {
 
 export const postCart = async (req, res) => {
   try {
-    const newCartId = await cartManager.generateCartId();
+    const newCartId = await cartService.generateCartId();
 
     const newCart = {
       id: newCartId,
       products: [],
     };
 
-    await cartManager.addCart(newCart);
+    await cartService.addCart(newCart);
 
     res
       .status(201)
@@ -101,7 +140,7 @@ export const getCart = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const existingCart = await cartManager.getCartById(id);
+    const existingCart = await cartService.getCartById(id);
     if (!existingCart) {
       return res.status(404).send({ error: "Carrito no encontrado" });
     }
@@ -126,7 +165,7 @@ export const postCartIdProductsId = async (req, res) => {
   try {
     const { cId, pId } = req.params;
     const newQuantity = req.body.quantity;
-    const carts = new cartManager();
+    const carts = new CartManager();
     console.log({ cId, pId, newQuantity });
     const result = await carts.addProductsToCart(cId, pId, newQuantity);
 
