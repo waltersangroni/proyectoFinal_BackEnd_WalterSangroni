@@ -1,24 +1,3 @@
-// Se debe entregar
-
-// Implementar, en el router de carts, la ruta /:cid/purchase, la cual permitirá finalizar 
-// el proceso de compra de dicho carrito.
-// La compra debe corroborar el stock del producto al momento de finalizarse
-// Si el producto tiene suficiente stock para la cantidad indicada en el producto del carrito, 
-// entonces restarlo del stock del producto y continuar.
-// Si el producto no tiene suficiente stock para la cantidad indicada en el producto del carrito, 
-// entonces no agregar el producto al proceso de compra. 
-
-// Se debe entregar
-
-// Al final, utilizar el servicio de Tickets para poder generar un ticket con los datos
-// de la compra.
-// En caso de existir una compra no completada, devolver el arreglo con los ids 
-// de los productos que no pudieron procesarse.
-// Una vez finalizada la compra, el carrito asociado al usuario que compró deberá 
-// contener sólo los productos que no pudieron comprarse. Es decir, se filtran los que sí se 
-// compraron y se quedan aquellos que no tenían disponibilidad.
-
-
 // Consigna
 
 // Se aplicará un módulo de mocking y un manejador de errores
@@ -35,6 +14,7 @@
 // y entregar 100 productos con el mismo formato que 
 // entregaría una petición de Mongo. Ésto solo debe ocurrir
 //  en un endpoint determinado (‘/mockingproducts’)
+
 // Además, generar un customizador de errores y crear un 
 // diccionario para tus errores más comunes al 
 // crear un producto, agregarlo al carrito, etc.
@@ -56,7 +36,6 @@ import mongoose from "mongoose";
 import passport from "passport";
 import  initializePassport from "./config/passport.config.js";
 import { mongoSecret, port, mongoUrl } from "./config/env.config.js"
-import userRoutes from "./routes/user.routes.js";
 import { ErrorHandler } from "./middlewars/error.js";
 
 dbConnect();
@@ -103,7 +82,6 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/session", sessionRoutes);
 
-app.use("/api/users", userRoutes);
 app.use(ErrorHandler);
 
 

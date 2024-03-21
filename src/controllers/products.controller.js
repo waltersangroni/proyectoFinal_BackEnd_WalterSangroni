@@ -1,4 +1,5 @@
 import { productManager } from "../app.js";
+import { faker } from "@faker-js/faker"
 
 export const getProducts = async (req, res) => {
   try {
@@ -16,6 +17,32 @@ export const getProducts = async (req, res) => {
     } else {
       res.status(400).json({ message: "Not found" });
     }
+  } catch (err) {
+    console.log({ err });
+    res
+      .status(400)
+      .json({ message: "Error al obtener los productos" + err.message });
+  }
+};
+
+const generateProduct = () => ({
+  _id: faker.string.uuid(),
+  id: faker.number.int().toString(),
+  title: faker.commerce.productName(),
+  code: faker.number.int({ min: 100000, max: 999999 }),
+  status: faker.datatype.boolean(),
+  stock: faker.number.int({ min: 0, max: 100 }),
+  price: faker.number.int({ min: 100, max: 5000 }),
+  thumbnails: [],
+  category: ['Insumos', 'Electrodomésticos', 'Ropa', 'Alimentos', 'Tecnología'][Math.floor(Math.random() * 5)],
+  __v: 0
+});
+
+export const getMockingProducts = async (req, res) => {
+  try {
+    const products = Array.from({ length: 100 }, () => generateProduct());
+
+    res.send(products)
   } catch (err) {
     console.log({ err });
     res

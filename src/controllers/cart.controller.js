@@ -1,11 +1,23 @@
 import Ticket from "../dao/db/ticketManager.js";
 import CartManager from "../dao/db/cartManager.js";
+import CustomErrors from "../services/errors/CustomErrors.js"
+import ErrorEnum from "../services/errors/error.enum.js";
 
 const ticketService = new Ticket();
 const cartService = new CartManager();
 
 export const purchaseCart = async (req, res) => {
   const { cId } = req.params;
+
+  if(!cId) {
+    CustomErrors.createError({
+      name: "Falta el id del carrito",
+      cause: "El id es null",
+      message: "Error al obtener el parametro del id del carrito",
+      code: ErrorEnum.INVALID_TYPE_ERROR,
+    });
+  }
+
   const cart = await cartService.getCartById(cId);
   const productsNotPurchased = cart.products.filter(product => {
       return product.product.stock < product.quantity;
@@ -42,6 +54,14 @@ return res.send({message: "Ticket create"});
 export const getCartId = async (req, res) => {
   try {
     const { cId } = req.params;
+    if(!cId) {
+      CustomErrors.createError({
+        name: "Falta el id del carrito",
+        cause: "El id es null",
+        message: "Error al obtener el parametro del id del carrito",
+        code: ErrorEnum.INVALID_TYPE_ERROR,
+      });
+    }
     const resultado = await cartService.getProductsCartById(cId);
     if (resultado.message === "OK") {
       return res.status(200).json(resultado);
