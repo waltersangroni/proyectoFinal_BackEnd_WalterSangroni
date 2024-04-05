@@ -31,6 +31,10 @@ viewRoutes.get("/restore-password", checkExistingUser, (req, res) => {
   res.render("restore-password");
 })
 
+viewRoutes.get("/forgot-password", (req, res) => {
+  res.render("forgot-password");
+});
+
 
 viewRoutes.get("/chat", checkUser, (req, res) => {
     res.render("chat");

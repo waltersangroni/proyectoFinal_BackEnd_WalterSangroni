@@ -32,6 +32,9 @@ const userSchema = mongoose.Schema({
         type: String,
         enum: ['usuario', 'administrador'],
         default: "usuario"
+    },
+    tokenPassword: {
+        type: Object,
     }
 });
 

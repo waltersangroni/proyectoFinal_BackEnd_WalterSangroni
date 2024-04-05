@@ -1,5 +1,9 @@
 import { userModel } from "../dao/db/models/user.model.js";
 import UserDTO from "../dtos/user.dto.js";
+import MailingService from "../services/mailing.js";
+
+const userService = new Users();
+const mailingService = new MailingService();
 
 export const postSessionRegister = async (req, res) => {
   try {
@@ -78,3 +82,47 @@ export const getCurrentUser = (req, res) => {
   const user = new UserDTO(req.user);
   res.send(user.getCurrentUser());
 }
+
+export const forgotPassword = async (req, res) => {
+  try {
+      const { email } = req.body;
+      const tokenObj = generateToken();
+      const user = await userService.getUser(email);
+      await userService.updateUser(user._id, { tokenPassword: tokenObj });
+      await mailingService.sendSimpleMail({
+          from: "NodeMailer Contant",
+          to: email,
+          subject: "Cambiar contraseña",
+          html: `
+              <p>Haz clic en este <a href="http://localhost:8080/api/sessions/restore-password/${tokenObj.token}">enlace</a> para restablecer tu contraseña.</p>
+          `
+      });
+      const emailSend = true;
+      req.logger.info(`Email sent to ${email}`);
+      res.render("forgot-password", { emailSend });
+  } catch (error) {
+      req.logger.error(error);
+      res.status(400).send({error});
+  }
+};
+
+export const restorePasswordToken = async (req, res) => {
+  try {
+      const { token } = req.params;
+      const user = await userService.getUserToken(token);
+      if (!user) {
+          const newTitle = true;
+          return res.render("forgot-password", { newTitle });
+      }
+      const tokenObj = user.tokenPassword;
+      if (tokenObj && verifyToken(tokenObj)) {
+          res.redirect("/restore-password");
+      } else {
+          const newTitle = true;
+          res.render("forgot-password", { newTitle });
+      }
+  } catch (error) {
+      req.logger.error(error);
+      res.status(400).send({error});
+  }
+};
