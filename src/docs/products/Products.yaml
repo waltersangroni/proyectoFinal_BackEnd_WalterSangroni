@@ -1,0 +1,172 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos se han obtenido correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Products'
+        "404":
+          description: Los productos no se han obtenido
+    post:
+      summary: Crea un producto (solamente los administradores y usuarios premium pueden hacerlo)
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createAndUpdateProduct'
+      responses:
+        "200":
+          description: El producto fue creado correctamente
+        "400":
+          description: El producto no fue creado
+        "403":
+          description: No tienes permiso para acceder a esta funcionalidad
+  
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un solo producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: El producto se ha obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Products'
+        "404":
+          description: El producto no fue encontrado
+    put:
+      summary: Actualiza un producto (solamente los administradores pueden hacerlo)
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createAndUpdateProduct'
+      responses:
+        "200":
+          description: Producto actualizado
+        "403":
+          description: No tienes permiso para acceder a esta funcionalidad
+        "404":
+          description: Producto no encontrado
+    delete:
+      summary: Elimina un producto (solamente los administradores y usuarios premium pueden hacerlo)
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: Producto eliminado
+        "403":
+          description: No tienes permiso para acceder a esta funcionalidad
+        "404":
+          description: Producto no encontrado
+
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerada por mongoDB
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Descripcion del producto
+        category:
+          type: String
+          description: Categoria del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: String
+          description: Url de la imagen del producto
+        code:
+          type: String
+          description: Codigo unico del producto
+        stock:
+          type: Number
+          description: Stock del producto
+        owner:
+          type: String
+          description: Creador del producto
+      example:
+        _id: ObjectId("65a17c92992de57a5b382884")
+        title: Cafe de Ecuador
+        description: Bebida cafe de especialidad
+        category: Cafe
+        price: 3350
+        thumbnail: https://imgur.com/D4IlFXd
+        code: A1
+        stock: 400
+        owner: cafe@gmail.com
+  requestBodies:
+    createAndUpdateProduct:
+      type: Object
+      properties:
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Descripcion del producto
+        category:
+          type: String
+          description: Categoria del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: String
+          description: Url de la imagen del producto
+        code:
+          type: String
+          description: Codigo unico del producto
+        stock:
+          type: Number
+          description: Stock del producto
+      example:
+        title: Cafe de Ecuador
+        description: Bebida cafe de especialidad
+        category: Cafe
+        price: 3550
+        thumbnail: https://imgur.com/D4IlFXd
+        code: A1
+        stock: 500

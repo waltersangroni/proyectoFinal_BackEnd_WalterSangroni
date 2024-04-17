@@ -1,0 +1,229 @@
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene todos los carritos
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Los carritos se han obtenido correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Carts'
+        "404":
+          description: Los carritos no se han obtenido
+    post:
+      summary: Crea un carrito
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createCart'
+      responses:
+        "201":
+          description: El carrito fue creado correctamente
+        "400":
+          description: El carrito no se pudo crear
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un solo carrito por su ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: El carrito se ha obtenido correctamente
+        "404":
+          description: El carrito no fue encontrado
+    put:
+      summary: Actualiza un carrito por su ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateCart'
+      responses:
+        "200":
+          description: El carrito fue actualizado correctamente
+        "404":
+          description: El carrito no fue encontrado
+  
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega un producto a un carrito (solamento los administradores y usuarios premium pueden hacerlo)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: El producto fue agregado correctamente
+        "403":
+          description: No tienes permiso para acceder a esta funcionalidad
+        "404":
+          description: El carrito no fue encontrado
+    put:
+      summary: Actualiza un producto dentro del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProductInCart'
+      responses:
+        "200":
+          description: Producto actualizado correctamente
+        "404":
+          description: Carrito o producto no encontrado
+    delete:
+      summary: Elimina un producto dentro del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+        - name: pid
+          in: path
+          description: Id del producto
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: Producto eliminado correctamente
+        "404":
+          description: Carrito o producto no encontrado
+      
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Hace la compra del carrito correspondiente a su ID y genera un ticket
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito
+          schema:
+            type: ObjectId
+      responses:
+        "200":
+          description: Ticket creado correctamente
+        "400":
+          description: No se pudo crear el ticket de venta
+
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerada por mongoDB
+        products:
+          type: array
+          description: Total de productos dentro del carrito
+      example:
+        _id: ObjectId("65f0a8ada91d0390f1acfd9e")
+        products: []
+  requestBodies:
+    createCart:
+      type: object
+    updateCart:
+      type: object
+      properties:
+        products:
+          type: array
+          properties:
+            product:
+              type: object
+              properties:
+                _id:
+                  type: ObejectId
+                  description: Id del producto
+                title:
+                  type: String
+                  description: Nombre del producto
+                description:
+                  type: String
+                  description: Descripcion del producto
+                category:
+                  type: String
+                  description: Categoria del producto
+                price:
+                  type: Number
+                  description: Precio del producto
+                thumbnail:
+                  type: String
+                  description: Url de la imagen del producto
+                code:
+                  type: String
+                  decription: Codigo unico del producto
+                stock:
+                  type: Number
+                  description: Stock del producto
+      example:
+        products: [
+          product: {
+            _id: 65a17cec992de57a5b382886,
+            title: Sprite,
+            description: Bebida gasificada,
+            category: Gaseosa,
+            price: 2150,
+            thumbnail: https://i.imgur.com/0ViLY3l.jpg,
+            code: A2,
+            stock: 270
+          }
+        ]
+    updateProductInCart:
+      type: object
+      properties:
+        quantity:
+          type: Number
+          description: Cantidad del producto
+      example:
+        quantity: 34
