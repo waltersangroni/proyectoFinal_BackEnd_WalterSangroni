@@ -15,11 +15,14 @@ import passport from "passport";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
+
 import  initializePassport from "./config/passport.config.js";
 import { mongoSecret, port, mongoUrl } from "./config/env.config.js"
 import { ErrorHandler } from "./middlewars/error.js";
 import { addLogger } from "./utils/logger.js";
 import { swaggerConfig } from "./configs/swagger-config.js";
+import testRouter from "./routes/test.routers.js";
+import usersRouter from "./routes/users.routes.js";
 
 dbConnect();
 
@@ -67,6 +70,8 @@ app.use('/', viewRoutes)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/session", sessionRoutes);
+app.use("/api/test", testRouter);
+app.use("/api/users", usersRouter);
 
 app.use(ErrorHandler);
 

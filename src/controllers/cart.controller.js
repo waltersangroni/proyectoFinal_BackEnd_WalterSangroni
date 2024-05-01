@@ -1,10 +1,12 @@
 import Ticket from "../dao/db/ticketManager.js";
 import CartManager from "../dao/db/cartManager.js";
+import ProductManager from "../dao/db/productManager.js";
 import CustomErrors from "../services/errors/CustomErrors.js"
 import ErrorEnum from "../services/errors/error.enum.js";
 
 const ticketService = new Ticket();
 const cartService = new CartManager();
+const productService = new ProductManager();
 
 export const purchaseCart = async (req, res) => {
   const { cId } = req.params;
@@ -196,5 +198,80 @@ export const postCartIdProductsId = async (req, res) => {
   } catch (err) {
     console.error("Error:", err);
     res.status(400).send({ err });
+  }
+};
+
+export const addProductToCart = async (req, res) => {
+  const { cId, pId } = req.params;
+  const cart = await cartService.getCartById(cId);
+  const existingProduct = cart.products.find(product => product.product._id.toString() === pId);
+  if (req.user.rol === "premium") {
+      const existingProduct = cart.products.find(product => product.product._id.toString() === pId);
+      if (existingProduct?.product.owner === req.user.email) {
+          return res.status(403).send({message: "Unauthorized"});
+      }
+  }
+  if (existingProduct) {
+      existingProduct.quantity++;
+  } else {
+      cart.products.push({ product: pId });
+  }
+  await cart.save();
+  if (!cart) {
+      req.logger.error("Cart not found");
+      return res.status(404).send({message: "error: cart not found"});
+  }
+  req.logger.info("Cart updated");
+  return res.send({message: "Cart updated"});
+};
+
+export const updateCart = async (req, res) => {
+  const { cId } = req.params;
+  const cartUpdated = req.body;
+  const result = await cartService.updateCart(cId, cartUpdated);
+  if (!result) {
+      req.logger.error("Cart not found");
+      return res.status(404).send({message: "error: cart not found"});
+  }
+  req.logger.info("Cart updated");
+  return res.send({message: "Cart updated"});
+};
+
+export const updateProductInCart = async (req, res) => {
+  const { cId, pId } = req.params;
+  const { quantity } = req.body;
+  const cart = await cartService.getCartById(cId);
+  if (!cart) {
+      req.logger.error("Cart not found");
+      return res.status(404).send({ message: "Error: Cart not found" });
+  }
+  const productIndex = cart.products.findIndex(product => product.product.equals(pId));
+  if (productIndex !== -1) {
+      cart.products[productIndex].quantity = quantity;
+      await cart.save();
+      req.logger.info("Product updated");
+      res.send({ message: "Product updated" });
+  } else {
+      req.logger.error("Product not found");
+      res.status(404).send({ message: "Error: Product not found" });
+  }
+};
+
+export const deleteProductInCart = async (req, res) => {
+  const { cId, pId } = req.params;
+  const cart = await cartService.getCartById(cId);
+  if (!cart) {
+      req.logger.error("Cart not found");
+      return res.status(404).send({message: "Error: Cart not found"});
+  }
+  const existingProduct = cart.products.find(product => product.product._id.toString() === pId);
+  if (existingProduct) {
+      cart.products = cart.products.filter(product => product.product._id.toString() !== pId);
+      await cart.save();
+      req.logger.info("Product deleted");
+      res.send({message: "product deleted"});
+  } else {
+      req.logger.error("Product not found");
+      res.status(404).send({message: "Error: Product not found"});
   }
 };
